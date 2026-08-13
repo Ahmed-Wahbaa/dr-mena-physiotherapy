@@ -23,7 +23,7 @@
 <button class="btn" type="submit">Send Inquiry</button><div class="notice" id="notice"></div></form></section>
 </main><footer><p><strong>Dr. Mena Physiotherapy</strong></p><p style="opacity:.8;margin-top:5px">For inquiries and appointments, please submit the form above.</p></footer>
 <script>
-const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbzMpIM6z8DFS6GOGKog_ujuPKuwpmOuEKB73tx9a1_sJrcBBdWgF7guz8Gka5pFjbsrMA/exec";
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbxKwsiZ3xFt-viqt777gYxQ9u5roIjO8hks_tcypc9sTWYN26-BTYFeFpwOvyBiFde0Og/exec";
 const form=document.getElementById("inquiryForm"),notice=document.getElementById("notice"),phone=document.getElementById("phone"),recordBtn=document.getElementById("recordBtn"),stopBtn=document.getElementById("stopBtn"),deleteVoiceBtn=document.getElementById("deleteVoiceBtn"),voiceStatus=document.getElementById("voiceStatus"),voicePreview=document.getElementById("voicePreview");
 let mediaRecorder=null,audioChunks=[],audioBlob=null;
 phone.addEventListener("input",()=>{phone.value=phone.value.replace(/\D/g,"").slice(0,11)});
