@@ -30,3 +30,39 @@ $('stop').onclick=()=>{if(rec&&rec.state!=='inactive')rec.stop();$('record').dis
 function b64(x){return new Promise((ok,no)=>{let r=new FileReader();r.onload=()=>ok(r.result.split(',')[1]);r.onerror=no;r.readAsDataURL(x)})}function err(id,on){$(id).style.display=on?'block':'none';return !on}
 $('form').onsubmit=async e=>{e.preventDefault();let ok=true;ok&=err('nameErr',$('name').value.trim().length<2);ok&=err('phoneErr',!/^01\d{9}$/.test($('phone').value));ok&=err('ageErr',!$('age').value||+$('age').value<1||+$('age').value>120);ok&=err('genderErr',!document.querySelector('[name=gender]:checked'));ok&=err('reasonErr',!$('reason').value);if(!ok)return;let btn=$('submit');btn.disabled=true;$('notice').className='notice upload';$('notice').style.display='block';$('notice').textContent=blob?'🎤 Uploading voice note…':'Sending inquiry…';try{if(rec&&rec.state!=='inactive'){rec.stop();await ready}await ready;let d=Object.fromEntries(new FormData($('form')).entries());if(blob){d.voiceNoteBase64=await b64(blob);d.voiceMimeType=blob.type;d.voiceFileName='voice-note-'+Date.now()+'.webm'}let f=$('file').files[0];if(f){d.fileBase64=await b64(f);d.fileName=f.name;d.fileMimeType=f.type||'application/octet-stream'}await fetch(URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)});$('form').reset();blob=null;chunks=[];ready=Promise.resolve();$('preview').style.display='none';$('delete').disabled=true;$('successPhoto').src=SUCCESS_IMAGE;$('successPhoto').style.display='block';$('notice').className='notice ok';$('notice').textContent=lang==='ar'?'✅ تم إرسال الاستفسار بنجاح. ستراجع دكتوره منه بياناتك وتتواصل معك قريبًا.':'✅ Your inquiry has been received. Dr. Mena will review your information and contact you.'}catch(e){$('notice').className='notice bad';$('notice').textContent=lang==='ar'?'❌ تعذر إرسال الاستفسار. حاول مرة أخرى.':'❌ We could not submit the inquiry. Please try again.'}finally{btn.disabled=false}};
 </script></body></html>
+<style>
+/* MOBILE_HERO_FULL_IMAGE_FIX */
+@media (max-width: 750px){
+  .hero{
+    min-height:100svh!important;
+    height:auto!important;
+    padding:0 7%!important;
+    box-sizing:border-box!important;
+    align-items:center!important;
+    position:relative!important;
+    overflow:hidden!important;
+  }
+  .hero-bg{
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    background-size:100% 100%!important;
+    background-position:center center!important;
+    background-repeat:no-repeat!important;
+    animation:heroImageMove 12s ease-in-out infinite alternate!important;
+    transform-origin:center center!important;
+  }
+  .hero-bg::after{
+    content:''!important;
+    position:absolute!important;
+    inset:0!important;
+    background:rgba(255,255,255,.20)!important;
+    pointer-events:none!important;
+  }
+  .hero > *:not(.hero-bg){position:relative!important;z-index:1!important;}
+}
+@keyframes heroImageMove{
+  from{transform:scale(1.01);}
+  to{transform:scale(1.06);}
+}
+</style>
