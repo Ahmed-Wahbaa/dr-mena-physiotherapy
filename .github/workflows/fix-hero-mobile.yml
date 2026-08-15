@@ -1,15 +1,13 @@
 name: Fix hero image mobile
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   fix:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +18,10 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
           marker = '</style>'
-          css = '''\n.hero-bg{inset:0!important;width:100%;height:100%;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;}\n@media(max-width:750px){.hero{min-height:720px!important;padding:0 7%!important;align-items:center!important}.hero-bg{inset:0!important;background-size:cover!important;background-position:center center!important}.hero-content{position:relative;z-index:1;max-width:100%;}.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.58));pointer-events:none;}}\n'''
+          css = '''
+.hero-bg{inset:0!important;width:100%;height:100%;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;}
+@media(max-width:750px){.hero{min-height:720px!important;padding:0 7%!important;align-items:center!important}.hero-bg{inset:0!important;background-size:cover!important;background-position:center center!important}.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.58));pointer-events:none;}}
+'''
           if '.hero-bg{inset:0!important' not in s:
               s = s.replace(marker, css + marker, 1)
               p.write_text(s, encoding='utf-8')
