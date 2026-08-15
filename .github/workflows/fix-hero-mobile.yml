@@ -1,35 +1,36 @@
 name: Fix hero image mobile
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   fix:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fix hero background CSS
+      - name: Fix hero image sizing on mobile
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          marker = '</style>'
-          css = '''
-.hero-bg{inset:0!important;width:100%;height:100%;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;}
-@media(max-width:750px){.hero{min-height:720px!important;padding:0 7%!important;align-items:center!important}.hero-bg{inset:0!important;background-size:cover!important;background-position:center center!important}.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.58));pointer-events:none;}}
-'''
-          if '.hero-bg{inset:0!important' not in s:
-              s = s.replace(marker, css + marker, 1)
-              p.write_text(s, encoding='utf-8')
+          old = '@media(max-width:750px){.hero{min-height:720px!important;padding:0 7%!important;align-items:center!important}.hero-bg{inset:0!important;background-size:cover!important;background-position:center center!important}'
+          new = '@media(max-width:750px){.hero{min-height:720px!important;padding:0 7%!important;align-items:center!important}.hero-bg{inset:0!important;background-size:auto 100%!important;background-position:center top!important;background-repeat:no-repeat!important}'
+          if old in s:
+              s = s.replace(old, new, 1)
+          else:
+              s += '\n<style>@media(max-width:750px){.hero-bg{background-size:auto 100%!important;background-position:center top!important;background-repeat:no-repeat!important}}</style>\n'
+          p.write_text(s, encoding='utf-8')
           PY
       - name: Commit fix
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Fix hero image sizing on mobile [skip ci]"
+          git diff --cached --quiet || git commit -m "Fix full hero photo on mobile [skip ci]"
           git push
