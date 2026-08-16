@@ -24,7 +24,7 @@ const SUCCESS_IMAGE='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0J
 let lang='en',rec=null,chunks=[],blob=null,ready=Promise.resolve();const $=x=>document.getElementById(x);
 $('lang').onclick=()=>{lang=lang==='en'?'ar':'en';document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.querySelectorAll('[data-en]').forEach(e=>e.textContent=e.dataset[lang]);$('lang').textContent=lang==='en'?'العربية 🇪🇬':'English 🇬🇧'};
 $('appointmentDate').min=new Date().toISOString().split('T')[0];$('phone').oninput=e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,11);
-const heroBg=$('heroBg');let ticking=false;function updateHeroParallax(){const y=Math.min(window.scrollY,900);heroBg.style.transform=`translate3d(0,${y*0.16}px,0) scale(1.06)`;ticking=false}window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateHeroParallax);ticking=true}},{passive:true});updateHeroParallax();
+const heroBg=$('heroBg');
 $('record').onclick=async()=>{try{let s=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];ready=new Promise(resolve=>{rec=new MediaRecorder(s);rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);rec.onstop=()=>{blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});$('preview').src=URL.createObjectURL(blob);$('preview').style.display='block';$('delete').disabled=false;s.getTracks().forEach(t=>t.stop());resolve(blob)}});rec.start();$('record').disabled=true;$('stop').disabled=false;$('voiceStatus').textContent='Recording…'}catch(e){$('voiceStatus').textContent='Microphone access was not allowed.'}};
 $('stop').onclick=()=>{if(rec&&rec.state!=='inactive')rec.stop();$('record').disabled=false;$('stop').disabled=true;$('voiceStatus').textContent='Finishing recording…'};$('delete').onclick=()=>{blob=null;chunks=[];ready=Promise.resolve();$('preview').removeAttribute('src');$('preview').style.display='none';$('delete').disabled=true};
 function b64(x){return new Promise((ok,no)=>{let r=new FileReader();r.onload=()=>ok(r.result.split(',')[1]);r.onerror=no;r.readAsDataURL(x)})}function err(id,on){$(id).style.display=on?'block':'none';return !on}
@@ -64,5 +64,40 @@ $('form').onsubmit=async e=>{e.preventDefault();let ok=true;ok&=err('nameErr',$(
 @keyframes heroImageMove{
   from{transform:scale(1.01);}
   to{transform:scale(1.06);}
+}
+</style>
+
+<style>
+/* MOBILE_HERO_SCROLL_SAFE */
+@media (max-width:750px){
+  .hero{
+    min-height:720px!important;
+    height:auto!important;
+    overflow:hidden!important;
+    position:relative!important;
+  }
+  .hero-bg{
+    inset:-6%!important;
+    width:auto!important;
+    height:auto!important;
+    background-size:cover!important;
+    background-position:center center!important;
+    background-repeat:no-repeat!important;
+    transform:none!important;
+    animation:mobileHeroBackground 14s ease-in-out infinite alternate!important;
+    will-change:background-position!important;
+  }
+  .hero-bg::after{
+    content:''!important;
+    position:absolute!important;
+    inset:0!important;
+    background:linear-gradient(90deg,rgba(255,255,255,.90) 0%,rgba(255,255,255,.55) 48%,rgba(255,255,255,.15) 100%)!important;
+    pointer-events:none!important;
+  }
+  .hero-inner,.hero-content{position:relative!important;z-index:1!important;}
+}
+@keyframes mobileHeroBackground{
+  from{background-position:48% 50%;}
+  to{background-position:54% 50%;}
 }
 </style>
