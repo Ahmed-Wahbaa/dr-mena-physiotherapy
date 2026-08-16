@@ -101,3 +101,52 @@ $('form').onsubmit=async e=>{e.preventDefault();let ok=true;ok&=err('nameErr',$(
   to{background-position:54% 50%;}
 }
 </style>
+
+<style>
+/* FINAL_MOBILE_HERO_FIX */
+.hero-bg{
+  transform:none!important;
+}
+@media (max-width:750px){
+  .hero{
+    min-height:720px!important;
+    height:720px!important;
+    padding:0 7%!important;
+    box-sizing:border-box!important;
+    position:relative!important;
+    overflow:hidden!important;
+    background:#dfeceb!important;
+  }
+  .hero-bg{
+    position:absolute!important;
+    top:-12%!important;
+    right:-12%!important;
+    bottom:-12%!important;
+    left:-12%!important;
+    width:auto!important;
+    height:auto!important;
+    background-size:cover!important;
+    background-position:center center!important;
+    background-repeat:no-repeat!important;
+    transform:none!important;
+    animation:heroMobileZoom 10s ease-in-out infinite alternate!important;
+    will-change:transform!important;
+  }
+  .hero-bg::after{
+    content:''!important;
+    position:absolute!important;
+    inset:0!important;
+    background:linear-gradient(90deg,rgba(255,255,255,.93) 0%,rgba(255,255,255,.70) 42%,rgba(255,255,255,.18) 100%)!important;
+    pointer-events:none!important;
+  }
+  .hero-inner{
+    position:relative!important;
+    z-index:2!important;
+    width:100%!important;
+  }
+}
+@keyframes heroMobileZoom{
+  from{transform:scale(1.02);}
+  to{transform:scale(1.08);}
+}
+</style>
