@@ -150,3 +150,44 @@ $('form').onsubmit=async e=>{e.preventDefault();let ok=true;ok&=err('nameErr',$(
   to{transform:scale(1.08);}
 }
 </style>
+
+<style>
+/* HERO_BACKGROUND_FINAL_FIX */
+.hero{
+  background-image:linear-gradient(90deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.82) 38%,rgba(255,255,255,.18) 72%,rgba(255,255,255,.08) 100%),url('data:image/jpeg!important;
+  background-size:cover!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-color:#dfeceb!important;
+}
+.hero-bg{
+  display:none!important;
+}
+@media (max-width:750px){
+  .hero{
+    min-height:100svh!important;
+    height:auto!important;
+    padding:90px 7% 70px!important;
+    box-sizing:border-box!important;
+    position:relative!important;
+    overflow:hidden!important;
+    background-size:cover!important;
+    background-position:center center!important;
+    background-attachment:scroll!important;
+    animation:heroBackgroundMotion 12s ease-in-out infinite alternate!important;
+  }
+  .hero::before{
+    content:''!important;
+    position:absolute!important;
+    inset:0!important;
+    background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.68) 45%,rgba(255,255,255,.16) 100%)!important;
+    z-index:0!important;
+    pointer-events:none!important;
+  }
+  .hero > *{position:relative!important;z-index:1!important;}
+}
+@keyframes heroBackgroundMotion{
+  from{background-position:47% center;}
+  to{background-position:53% center;}
+}
+</style>
